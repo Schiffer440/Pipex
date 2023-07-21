@@ -6,7 +6,7 @@
 /*   By: adugain <adugain@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/07 15:17:12 by adugain           #+#    #+#             */
-/*   Updated: 2023/07/17 13:51:26 by adugain          ###   ########.fr       */
+/*   Updated: 2023/07/19 21:49:01 by adugain          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,10 +43,10 @@ char	*ft_strjoin_pipex(char *s1, char *s2, int token)
 	}
 	str[i] = '\0';
 	if (token == 1)
-		free(s2);
+		free(s1);
 	if (token == 2)
 		free(s2);
-	if (token == 3);
+	if (token == 3)
 	{
 		free(s1);
 		free(s2);
@@ -56,7 +56,6 @@ char	*ft_strjoin_pipex(char *s1, char *s2, int token)
 
 char	**get_paths(char **envp)
 {
-	dprintf(2, "entering get paths...\n");
 	int i;
 	char **Mypath;
  
@@ -68,9 +67,7 @@ char	**get_paths(char **envp)
 		else
 			i++;
 	}
-	dprintf(2, "line found\n");
 	envp[i] += 5;
-	dprintf(2,"spliting paths\n");
 	Mypath = ft_split(envp[i], ':');
 	return (Mypath);
 }
@@ -83,25 +80,19 @@ void	ft_exec(char *cmd, char **envp)
 	char	*cl_path;
 	int	i;
 
-	dprintf(2, "in exec\n");
+	i = 0;
 	arg = ft_split(cmd, ' ');
-	dprintf(2, "pathing\n");
 	paths = get_paths(envp);
-	dprintf(2, "pathed\n");
 	while (paths[i])
 	{
-		dprintf(2, "geting exec\n");
-		cl_path = ft_strjoin_pipex(paths[i], "/", 2);
+		cl_path = ft_strjoin_pipex(paths[i], "/", 0);
 		exec = ft_strjoin_pipex(cl_path, arg[0], 1);
 		if (access(exec, F_OK | X_OK) == 0)
 		{
-			dprintf(2, "exec granted\n");
 			break;
 		}
-			
 		else
 		{
-			dprintf(2, "exec rejected\n");
 			free(exec);
 			i++;
 		}
@@ -115,7 +106,7 @@ int	next_cmd(char *cmd, char **envp)
 	int	p[2];
 	
 	if (pipe(p) == -1)
-		return 1;
+		return (1);
 	pid = fork();
 
 	if (pid == 0)
@@ -123,7 +114,6 @@ int	next_cmd(char *cmd, char **envp)
 		dup2(p[1], STDOUT_FILENO);
 		close(p[0]);
 		close(p[1]);
-		dprintf(2, "sending cmd\n");
 		ft_exec(cmd, envp);
 	}
 	else
@@ -132,6 +122,7 @@ int	next_cmd(char *cmd, char **envp)
 		close(p[0]);
 		close(p[1]);
 	}
+	return (0);
 }
 
 int	main(int ac, char **av, char **envp)
@@ -142,18 +133,15 @@ int	main(int ac, char **av, char **envp)
 	
 	i = 2;
 	fd1 = open(av[1], O_RDONLY);
-	dprintf(2, "Begining\n");
 	if (fd1 == -1)
 		perror("Pipex");
 	else
 	{
-		dprintf(2, "duping\n");
 		dup2(fd1, 0);
 		close(fd1);
 	}
 	while (i < ac - 2)
 	{
-		dprintf(2, "received cmd\n");
 		next_cmd(av[i++], envp);
 	}
 	fd2 = open(av[i + 1], O_WRONLY | O_CREAT | O_TRUNC, 0644);
