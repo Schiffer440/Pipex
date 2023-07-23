@@ -6,7 +6,7 @@
 /*   By: adugain <adugain@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/07 15:17:12 by adugain           #+#    #+#             */
-/*   Updated: 2023/07/19 21:49:01 by adugain          ###   ########.fr       */
+/*   Updated: 2023/07/23 22:44:55 by adugain          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ char	**get_paths(char **envp)
 	i = 0;
 	while (envp[i])
 	{
-		if (ft_strncmp(envp[i], "PATH",4 ) == 0)
+		if (ft_strncmp(envp[i], "PATH", 4) == 0)
 			break;
 		else
 			i++;
@@ -108,7 +108,6 @@ int	next_cmd(char *cmd, char **envp)
 	if (pipe(p) == -1)
 		return (1);
 	pid = fork();
-
 	if (pid == 0)
 	{
 		dup2(p[1], STDOUT_FILENO);
@@ -125,7 +124,7 @@ int	next_cmd(char *cmd, char **envp)
 	return (0);
 }
 
-int	main(int ac, char **av, char **envp)
+void	pipex(int ac ,char **av, char **envp)
 {
 	int	fd1;
 	int 	fd2;
@@ -137,7 +136,7 @@ int	main(int ac, char **av, char **envp)
 		perror("Pipex");
 	else
 	{
-		dup2(fd1, 0);
+		dup2(fd1, STDIN_FILENO);
 		close(fd1);
 	}
 	while (i < ac - 2)
@@ -147,4 +146,45 @@ int	main(int ac, char **av, char **envp)
 	fd2 = open(av[i + 1], O_WRONLY | O_CREAT | O_TRUNC, 0644);
 	dup2(fd2, 1);
 	ft_exec(av[i], envp);
+}
+
+void	pipex_here_doc(char *endname)
+{
+	char	*line;
+	int	fd;
+	char	*temp;
+
+	temp = "temp";
+	fd = open(temp, O_RDWR | O_CREAT, 0644);
+	if (fd == -1)
+		perror("Here_doc error");
+	while ((line = get_next_line(0)))
+	{
+		if (ft_strncmp(line, endname, sizeof(line) - 1) == 0)
+			break;
+		ft_putstr_fd(line, fd);
+		write(fd, "\n", 1);
+		ft_printf("readed:%s end with: %s %d\n", line, endname, sizeof(line));
+		
+	}
+	ft_printf("reading over\n");
+	free(line);
+}
+
+int	main(int ac, char **av, char **envp)
+{
+	
+	if (ac >= 4)
+	{
+		if (ft_strncmp(av[1], "here_doc", 8) == 0)
+		{
+			ft_printf("here_doc\n");
+			pipex_here_doc(av[2]);
+			return (0);
+		}
+		pipex(ac, av, envp);
+	}
+	else
+		write(1, "\n", 1);
+	return (0);
 }

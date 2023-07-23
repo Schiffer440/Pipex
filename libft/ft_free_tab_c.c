@@ -1,27 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_putstr_fd.c                                     :+:      :+:    :+:   */
+/*   ft_free_tab_c.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: adugain <adugain@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/11/16 16:56:41 by adugain           #+#    #+#             */
-/*   Updated: 2023/07/23 22:32:26 by adugain          ###   ########.fr       */
+/*   Created: 2023/07/21 17:54:00 by adugain           #+#    #+#             */
+/*   Updated: 2023/07/21 17:55:25 by adugain          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-void	ft_putstr_fd(char *s, int fd)
+void	ft_free_tab_c(char **str)
 {
 	int	i;
 
-	if (!s)
-		return ;
 	i = 0;
-	while (s[i])
+	while (str[i])
 	{
-		write(fd, &s[i], 1);
+		free(str[i]);
 		i++;
 	}
+	free(str);
 }
