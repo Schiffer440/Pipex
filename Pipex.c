@@ -6,7 +6,7 @@
 /*   By: adugain <adugain@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/07 15:17:12 by adugain           #+#    #+#             */
-/*   Updated: 2023/07/24 13:33:17 by adugain          ###   ########.fr       */
+/*   Updated: 2023/07/24 14:29:59 by adugain          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -158,8 +158,8 @@ void	pipex_here_doc(int ac, char **av, char *endname, char **envp)
 
 
 	i = 3;
-	temp = "temp";
-	fd = open(temp, O_RDWR | O_CREAT, 0644);
+	temp = "/tmp/temp";
+	fd = open(temp, O_WRONLY | O_CREAT, 0644);
 	if (fd == -1)
 		perror("Here_doc error");
 	while ((line = get_next_line(0)))
@@ -169,9 +169,11 @@ void	pipex_here_doc(int ac, char **av, char *endname, char **envp)
 		ft_putstr_fd(line, fd);
 		write(fd, "\n", 1);
 		ft_printf("readed:%s end with: %s %d\n", line, endname, sizeof(line));
+		free(line);
 	}
 	free(line);
 	ft_printf("reading over\n");
+	fd = open(temp, O_RDONLY, 0644);
 	dup2(fd, STDIN_FILENO);
 	close(fd);
 	while(i < ac - 2)
@@ -180,6 +182,8 @@ void	pipex_here_doc(int ac, char **av, char *endname, char **envp)
 	}
 	fd1 = open(av[i + 1], O_WRONLY | O_CREAT | O_APPEND, 0644);
 	dup2(fd1, STDOUT_FILENO);
+	close(fd1);
+	unlink(temp);
 	ft_exec(av[i], envp);
 }
 
