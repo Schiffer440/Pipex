@@ -6,7 +6,7 @@
 /*   By: adugain <adugain@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/07 15:17:12 by adugain           #+#    #+#             */
-/*   Updated: 2023/07/23 22:44:55 by adugain          ###   ########.fr       */
+/*   Updated: 2023/07/24 13:33:17 by adugain          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -144,16 +144,20 @@ void	pipex(int ac ,char **av, char **envp)
 		next_cmd(av[i++], envp);
 	}
 	fd2 = open(av[i + 1], O_WRONLY | O_CREAT | O_TRUNC, 0644);
-	dup2(fd2, 1);
+	dup2(fd2, STDOUT_FILENO);
 	ft_exec(av[i], envp);
 }
 
-void	pipex_here_doc(char *endname)
+void	pipex_here_doc(int ac, char **av, char *endname, char **envp)
 {
 	char	*line;
 	int	fd;
+	int	fd1;
 	char	*temp;
+	int	i;
 
+
+	i = 3;
 	temp = "temp";
 	fd = open(temp, O_RDWR | O_CREAT, 0644);
 	if (fd == -1)
@@ -165,10 +169,18 @@ void	pipex_here_doc(char *endname)
 		ft_putstr_fd(line, fd);
 		write(fd, "\n", 1);
 		ft_printf("readed:%s end with: %s %d\n", line, endname, sizeof(line));
-		
 	}
-	ft_printf("reading over\n");
 	free(line);
+	ft_printf("reading over\n");
+	dup2(fd, STDIN_FILENO);
+	close(fd);
+	while(i < ac - 2)
+	{
+		next_cmd(av[i++], envp);
+	}
+	fd1 = open(av[i + 1], O_WRONLY | O_CREAT | O_APPEND, 0644);
+	dup2(fd1, STDOUT_FILENO);
+	ft_exec(av[i], envp);
 }
 
 int	main(int ac, char **av, char **envp)
@@ -179,7 +191,7 @@ int	main(int ac, char **av, char **envp)
 		if (ft_strncmp(av[1], "here_doc", 8) == 0)
 		{
 			ft_printf("here_doc\n");
-			pipex_here_doc(av[2]);
+			pipex_here_doc(ac, av, av[2], envp);
 			return (0);
 		}
 		pipex(ac, av, envp);
