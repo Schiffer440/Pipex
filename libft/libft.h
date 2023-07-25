@@ -6,7 +6,7 @@
 /*   By: adugain <adugain@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/08 10:28:55 by adugain           #+#    #+#             */
-/*   Updated: 2023/07/25 11:09:49 by adugain          ###   ########.fr       */
+/*   Updated: 2023/07/25 13:39:10 by adugain          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,7 +84,7 @@ int		ft_printf(const char *str, ...);
 void	ft_replace(char *str, char a, char b);
 int		ft_abs(int nb);
 void	ft_free_tab_c(char **str);
-void	ft_perror(char *msg);
+void	ft_perror(char *msg, int status_code);
 void	ft_error(char *msg);
 float	ft_fabs(float f);
 int		ft_max(int a, int b);
