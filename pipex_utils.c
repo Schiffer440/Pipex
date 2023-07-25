@@ -6,7 +6,7 @@
 /*   By: adugain <adugain@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/25 11:11:05 by adugain           #+#    #+#             */
-/*   Updated: 2023/07/25 14:32:46 by adugain          ###   ########.fr       */
+/*   Updated: 2023/07/25 20:41:36 by adugain          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,25 +65,30 @@ static char	**get_paths(char **envp)
 	return (mypath);
 }
 
+static void	exec_error(char **paths, char **cmd)
+{
+	ft_free_tab_c(paths);
+	ft_free_tab_c(cmd);
+	ft_perror("Command not found", 127);
+}
+
 void	ft_exec(char *cmd, char **envp)
 {
-	char	**arg;
+	char	**cl_cmd;
 	char	**paths;
 	char	*exec;
 	char	*cl_path;
 	int		i;
 
 	i = 0;
-	arg = ft_split(cmd, ' ');
+	cl_cmd = ft_split(cmd, ' ');
 	paths = get_paths(envp);
 	while (paths[i])
 	{
 		cl_path = ft_strjoin_pipex(paths[i], "/", 0);
-		exec = ft_strjoin_pipex(cl_path, arg[0], 1);
+		exec = ft_strjoin_pipex(cl_path, cl_cmd[0], 1);
 		if (access(exec, F_OK | X_OK) == 0)
-		{
 			break ;
-		}
 		else
 		{
 			free(exec);
@@ -91,10 +96,6 @@ void	ft_exec(char *cmd, char **envp)
 			i++;
 		}
 	}
-	if (!exec || execve(exec, arg, envp) == -1)
-	{
-		ft_free_tab_c(paths);
-		ft_free_tab_c(arg);
-		ft_perror("Exec error", 127);
-	}
+	if (!exec || execve(exec, cl_cmd, envp) == -1)
+		exec_error(paths, cl_cmd);
 }

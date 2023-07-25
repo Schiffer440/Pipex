@@ -6,7 +6,7 @@
 /*   By: adugain <adugain@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/07 15:17:12 by adugain           #+#    #+#             */
-/*   Updated: 2023/07/25 14:22:57 by adugain          ###   ########.fr       */
+/*   Updated: 2023/07/25 20:40:52 by adugain          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ void	pipex(int ac, char **av, char **envp)
 	i = 2;
 	fd1 = open(av[1], O_RDONLY);
 	if (fd1 == -1)
-		perror("Pipex");
+		perror("Error opening file");
 	else
 	{
 		dup2(fd1, STDIN_FILENO);
@@ -124,6 +124,5 @@ int	main(int ac, char **av, char **envp)
 	}
 	else
 		write(1, "\n", 1);
-	
 	return (0);
 }
