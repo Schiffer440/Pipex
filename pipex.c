@@ -6,7 +6,7 @@
 /*   By: adugain <adugain@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/07 15:17:12 by adugain           #+#    #+#             */
-/*   Updated: 2023/07/25 12:17:24 by adugain          ###   ########.fr       */
+/*   Updated: 2023/07/25 14:22:57 by adugain          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,7 @@ void	pipex(int ac, char **av, char **envp)
 	}
 	fd2 = open(av[i + 1], O_WRONLY | O_CREAT | O_TRUNC, 0644);
 	dup2(fd2, STDOUT_FILENO);
+	close(fd2);
 	ft_exec(av[i], envp);
 }
 
@@ -90,6 +91,7 @@ void	pipex_here_doc(int ac, char **av, char *end_of_file, char **envp)
 	if (fd == -1)
 		perror("Here_doc error");
 	get_temp(fd, end_of_file);
+	close(fd);
 	fd = open(temp, O_RDONLY, 0644);
 	dup2(fd, STDIN_FILENO);
 	close(fd);
@@ -114,9 +116,14 @@ int	main(int ac, char **av, char **envp)
 			pipex_here_doc(ac, av, av[2], envp);
 			return (0);
 		}
-		pipex(ac, av, envp);
+		else
+			pipex(ac, av, envp);
+		while (wait(NULL) > 0)
+			;
+		return (0);
 	}
 	else
 		write(1, "\n", 1);
+	
 	return (0);
 }

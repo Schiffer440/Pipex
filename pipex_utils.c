@@ -6,7 +6,7 @@
 /*   By: adugain <adugain@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/25 11:11:05 by adugain           #+#    #+#             */
-/*   Updated: 2023/07/25 13:39:20 by adugain          ###   ########.fr       */
+/*   Updated: 2023/07/25 14:32:46 by adugain          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,13 +87,14 @@ void	ft_exec(char *cmd, char **envp)
 		else
 		{
 			free(exec);
+			exec = NULL;
 			i++;
 		}
 	}
-	if (execve(exec, arg, envp) == -1)
+	if (!exec || execve(exec, arg, envp) == -1)
 	{
 		ft_free_tab_c(paths);
 		ft_free_tab_c(arg);
-		ft_perror("Exec error", 2);
+		ft_perror("Exec error", 127);
 	}
 }
