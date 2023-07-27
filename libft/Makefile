@@ -6,7 +6,7 @@
 #    By: adugain <adugain@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/11/07 11:45:28 by adugain           #+#    #+#              #
-#    Updated: 2023/07/22 12:14:05 by adugain          ###   ########.fr        #
+#    Updated: 2023/07/27 13:16:10 by adugain          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -25,6 +25,8 @@ SRC =	ft_calloc.c ft_bzero.c ft_isalnum.c ft_isalpha.c ft_isascii.c \
 		ft_min.c ft_max.c
 
 CFLAGS	= -Wextra -Wall -Werror
+
+CC = gcc
 
 OBJ_DIR = ./objs/
 
