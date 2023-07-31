@@ -6,7 +6,7 @@
 /*   By: adugain <adugain@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/07 15:17:12 by adugain           #+#    #+#             */
-/*   Updated: 2023/07/27 18:52:27 by adugain          ###   ########.fr       */
+/*   Updated: 2023/07/31 14:43:03 by adugain          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ void	pipex(int ac, char **av, char **envp)
 	i = 2;
 	fd1 = open(av[1], O_RDONLY);
 	if (fd1 == -1)
-		ft_perror("Error opening file", 127);
+		fd_perror("Error opening file", fd1);
 	else
 	{
 		dup2(fd1, STDIN_FILENO);
@@ -56,6 +56,8 @@ void	pipex(int ac, char **av, char **envp)
 		next_cmd(av[i++], envp);
 	}
 	fd2 = open(av[i + 1], O_WRONLY | O_CREAT | O_TRUNC, 0644);
+	if (fd2 == -1)
+		ft_perror("Error opening file", 127);
 	dup2(fd2, STDOUT_FILENO);
 	close(fd2);
 	ft_exec(av[i], envp);
@@ -64,6 +66,7 @@ void	pipex(int ac, char **av, char **envp)
 static void	get_temp(int fd, char *end_of_file)
 {
 	char	*line;
+	int		fd_clean;
 
 	line = get_next_line(0);
 	while (line != NULL)
@@ -74,7 +77,11 @@ static void	get_temp(int fd, char *end_of_file)
 		write(fd, "\n", 1);
 		free(line);
 		line = get_next_line(0);
+		ft_printf("heredoc>");
 	}
+	fd_clean = open("/tmp/clean", O_RDONLY | O_CREAT, 0644);
+	get_next_line(fd_clean);
+	close(fd_clean);
 	free(line);
 }
 
@@ -112,7 +119,7 @@ int	main(int ac, char **av, char **envp)
 	{
 		if (ft_strncmp(av[1], "here_doc", 8) == 0)
 		{
-			ft_printf("here_doc\n");
+			ft_printf("heredoc>");
 			pipex_here_doc(ac, av, av[2], envp);
 			return (0);
 		}
@@ -126,6 +133,3 @@ int	main(int ac, char **av, char **envp)
 		write(1, "\n", 1);
 	return (0);
 }
-
-
-// waitpid(pid, NULL, 0);

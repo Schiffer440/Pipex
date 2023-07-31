@@ -6,7 +6,7 @@
 #    By: adugain <adugain@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/07/19 21:41:34 by adugain           #+#    #+#              #
-#    Updated: 2023/07/27 13:15:02 by adugain          ###   ########.fr        #
+#    Updated: 2023/07/31 14:48:57 by adugain          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,7 +16,7 @@ LIBFT = libft/libft.a
 
 LIBX = minilibx/libmlx.a
 
-SRC = pipex.c pipex_utils.c
+SRC = pipex.c pipex_utils.c pipex_errors.c
 
 CFLAGS	= -Wextra -Wall -Werror -MMD -g3
 
@@ -49,7 +49,7 @@ re: fclean all
 .PHONY: all clean fclean re
 
 $(OBJ_DIR)%.o : %.c
-	mkdir -p $(@D)
+	@mkdir -p $(@D)
 	${CC} ${CFLAGS} -c $< -o $@
 
 -include $(DEP)

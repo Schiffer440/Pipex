@@ -6,7 +6,7 @@
 #    By: adugain <adugain@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/11/07 11:45:28 by adugain           #+#    #+#              #
-#    Updated: 2023/07/27 13:16:10 by adugain          ###   ########.fr        #
+#    Updated: 2023/07/31 10:36:08 by adugain          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -50,7 +50,7 @@ re: fclean all
 .PHONY: all clean fclean re
 
 $(OBJ_DIR)%.o : %.c
-	mkdir -p $(@D)
-	${CC} ${CFLAGS} -c $< -o $@
+	@mkdir -p $(@D)
+	@${CC} ${CFLAGS} -c $< -o $@
 
 -include $(DEP)

@@ -6,7 +6,7 @@
 /*   By: adugain <adugain@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/07 15:42:17 by adugain           #+#    #+#             */
-/*   Updated: 2023/05/15 15:35:58 by adugain          ###   ########.fr       */
+/*   Updated: 2023/07/31 14:01:25 by adugain          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,6 +86,7 @@ static char	*write_line(char *stash)
 	{
 		line[i] = '\0';
 	}
+	line[i] = '\0';
 	return (line);
 }
 

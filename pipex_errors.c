@@ -1,39 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_printf.c                                        :+:      :+:    :+:   */
+/*   pipex_errors.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: adugain <adugain@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/12/05 11:06:49 by adugain           #+#    #+#             */
-/*   Updated: 2023/07/31 14:52:14 by adugain          ###   ########.fr       */
+/*   Created: 2023/07/31 14:38:01 by adugain           #+#    #+#             */
+/*   Updated: 2023/07/31 14:50:53 by adugain          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "pipex.h"
 
-int	ft_printf(const char *str, ...)
+void	fd_perror(char *msg, int fd)
 {
-	int		i;
-	int		len;
-	va_list	args;
-
-	i = 0;
-	len = 0;
-	if (!str)
-		return (0);
-	va_start(args, str);
-	while (str[i])
+	fd = open("/tmp/cheat", O_RDONLY | O_CREAT, 0644);
+	if (fd == -1)
+		ft_perror("Failed to hijack file", 127);
+	else
 	{
-		if (str[i] == '%')
-		{
-			len += format(str[i + 1], args);
-			i++;
-		}
-		else
-			len += write(1, &str[i], 1);
-		i++;
+		dup2(fd, STDIN_FILENO);
+		close(fd);
 	}
-	va_end(args);
-	return (len);
+	perror(msg);
 }

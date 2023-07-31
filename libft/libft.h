@@ -6,7 +6,7 @@
 /*   By: adugain <adugain@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/08 10:28:55 by adugain           #+#    #+#             */
-/*   Updated: 2023/07/25 13:39:10 by adugain          ###   ########.fr       */
+/*   Updated: 2023/07/31 14:40:49 by adugain          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@
 # include <sys/types.h>
 # include <sys/wait.h>
 # include <time.h>
+# include <errno.h>
 
 int		ft_isalpha(char c);
 int		ft_isdigit(int c);
