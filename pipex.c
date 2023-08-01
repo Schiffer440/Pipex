@@ -6,34 +6,33 @@
 /*   By: adugain <adugain@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/07 15:17:12 by adugain           #+#    #+#             */
-/*   Updated: 2023/07/31 14:43:03 by adugain          ###   ########.fr       */
+/*   Updated: 2023/08/01 18:02:01 by adugain          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
 
-static int	next_cmd(char *cmd, char **envp)
+static void	next_cmd(char *cmd, char **envp)
 {
 	int	pid;
 	int	p[2];
 
 	if (pipe(p) == -1)
-		return (1);
+		ft_perror("Failed to pipe", 127);
 	pid = fork();
 	if (pid == 0)
 	{
 		dup2(p[1], STDOUT_FILENO);
-		close(p[0]);
 		close(p[1]);
+		close(p[0]);
 		ft_exec(cmd, envp);
 	}
 	else
 	{
-		dup2(p[0], 0);
+		dup2(p[0], STDIN_FILENO);
 		close(p[0]);
 		close(p[1]);
 	}
-	return (0);
 }
 
 void	pipex(int ac, char **av, char **envp)
@@ -45,7 +44,7 @@ void	pipex(int ac, char **av, char **envp)
 	i = 2;
 	fd1 = open(av[1], O_RDONLY);
 	if (fd1 == -1)
-		fd_perror("Error opening file", fd1);
+		fd_perror(ft_strjoin("Error opening ", av[1]), fd1);
 	else
 	{
 		dup2(fd1, STDIN_FILENO);
@@ -66,12 +65,13 @@ void	pipex(int ac, char **av, char **envp)
 static void	get_temp(int fd, char *end_of_file)
 {
 	char	*line;
-	int		fd_clean;
 
 	line = get_next_line(0);
+	ft_printf("heredoc>");
 	while (line != NULL)
 	{
-		if (ft_strncmp(line, end_of_file, sizeof(line) - 1) == 0)
+		if (ft_strncmp(line, end_of_file, sizeof(line) - 1) == 0
+			&& sizeof(line) == sizeof(end_of_file))
 			break ;
 		ft_putstr_fd(line, fd);
 		write(fd, "\n", 1);
@@ -79,9 +79,7 @@ static void	get_temp(int fd, char *end_of_file)
 		line = get_next_line(0);
 		ft_printf("heredoc>");
 	}
-	fd_clean = open("/tmp/clean", O_RDONLY | O_CREAT, 0644);
-	get_next_line(fd_clean);
-	close(fd_clean);
+	clean_the_mess();
 	free(line);
 }
 
@@ -125,7 +123,7 @@ int	main(int ac, char **av, char **envp)
 		}
 		else
 			pipex(ac, av, envp);
-		while (wait(NULL) > 0)
+		while (wait(NULL) != 0 || errno != ECHILD)
 			;
 		return (0);
 	}

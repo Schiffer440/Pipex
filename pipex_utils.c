@@ -6,7 +6,7 @@
 /*   By: adugain <adugain@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/25 11:11:05 by adugain           #+#    #+#             */
-/*   Updated: 2023/07/31 13:37:09 by adugain          ###   ########.fr       */
+/*   Updated: 2023/08/01 18:03:48 by adugain          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,24 +65,13 @@ static char	**get_paths(char **envp)
 	return (mypath);
 }
 
-static void	exec_error(char **paths, char **cmd)
+static char	*get_exec(char **paths, char **cl_cmd)
 {
-	ft_free_tab_c(paths);
-	ft_free_tab_c(cmd);
-	ft_perror("Command not found", 127);
-}
-
-void	ft_exec(char *cmd, char **envp)
-{
-	char	**cl_cmd;
-	char	**paths;
 	char	*exec;
 	char	*cl_path;
 	int		i;
 
 	i = 0;
-	cl_cmd = ft_split(cmd, ' ');
-	paths = get_paths(envp);
 	while (paths[i])
 	{
 		cl_path = ft_strjoin_pipex(paths[i], "/", 0);
@@ -96,6 +85,18 @@ void	ft_exec(char *cmd, char **envp)
 			i++;
 		}
 	}
+	return (exec);
+}
+
+void	ft_exec(char *cmd, char **envp)
+{
+	char	**cl_cmd;
+	char	**paths;
+	char	*exec;
+
+	cl_cmd = ft_split(cmd, ' ');
+	paths = get_paths(envp);
+	exec = get_exec(paths, cl_cmd);
 	if (!exec || execve(exec, cl_cmd, envp) == -1)
-		exec_error(paths, cl_cmd);
+		exec_error(paths, cl_cmd, &(*cmd));
 }
