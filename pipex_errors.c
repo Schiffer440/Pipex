@@ -6,7 +6,7 @@
 /*   By: adugain <adugain@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/31 14:38:01 by adugain           #+#    #+#             */
-/*   Updated: 2023/08/01 18:01:49 by adugain          ###   ########.fr       */
+/*   Updated: 2023/08/02 17:56:46 by adugain          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@ void	fd_perror(char *msg, int fd)
 		unlink("/tmp/cheat");
 	}
 	perror(msg);
+	free(msg);
 }
 
 void	clean_the_mess(void)

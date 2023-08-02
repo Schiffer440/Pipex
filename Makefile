@@ -6,7 +6,7 @@
 #    By: adugain <adugain@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/07/19 21:41:34 by adugain           #+#    #+#              #
-#    Updated: 2023/07/31 14:48:57 by adugain          ###   ########.fr        #
+#    Updated: 2023/08/02 17:38:35 by adugain          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,7 +16,7 @@ LIBFT = libft/libft.a
 
 LIBX = minilibx/libmlx.a
 
-SRC = pipex.c pipex_utils.c pipex_errors.c
+SRC = pipex.c pipex_utils.c pipex_errors.c duplicate_fds.c
 
 CFLAGS	= -Wextra -Wall -Werror -MMD -g3
 

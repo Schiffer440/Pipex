@@ -6,7 +6,7 @@
 /*   By: adugain <adugain@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/07 15:17:12 by adugain           #+#    #+#             */
-/*   Updated: 2023/08/01 18:02:01 by adugain          ###   ########.fr       */
+/*   Updated: 2023/08/02 18:25:46 by adugain          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,16 +22,18 @@ static void	next_cmd(char *cmd, char **envp)
 	pid = fork();
 	if (pid == 0)
 	{
-		dup2(p[1], STDOUT_FILENO);
-		close(p[1]);
-		close(p[0]);
+		// dup2(p[1], STDOUT_FILENO);
+		// close(p[1]);
+		// close(p[0]);
+		dup_pipeout(p);
 		ft_exec(cmd, envp);
 	}
 	else
 	{
-		dup2(p[0], STDIN_FILENO);
-		close(p[0]);
-		close(p[1]);
+		// dup2(p[0], STDIN_FILENO);
+		// close(p[0]);
+		// close(p[1]);
+		dup_pipein(p);
 	}
 }
 
@@ -56,7 +58,7 @@ void	pipex(int ac, char **av, char **envp)
 	}
 	fd2 = open(av[i + 1], O_WRONLY | O_CREAT | O_TRUNC, 0644);
 	if (fd2 == -1)
-		ft_perror("Error opening file", 127);
+		ft_perror(ft_strjoin("Error opening ", av[i + 1]), 127);
 	dup2(fd2, STDOUT_FILENO);
 	close(fd2);
 	ft_exec(av[i], envp);
@@ -67,17 +69,21 @@ static void	get_temp(int fd, char *end_of_file)
 	char	*line;
 
 	line = get_next_line(0);
-	ft_printf("heredoc>");
+	// ft_printf("heredoc>");
 	while (line != NULL)
 	{
 		if (ft_strncmp(line, end_of_file, sizeof(line) - 1) == 0
 			&& sizeof(line) == sizeof(end_of_file))
 			break ;
-		ft_putstr_fd(line, fd);
-		write(fd, "\n", 1);
-		free(line);
-		line = get_next_line(0);
-		ft_printf("heredoc>");
+		else
+		{
+			ft_printf("heredoc>");
+			ft_putstr_fd(line, fd);
+			write(fd, "\n", 1);
+			free(line);
+			line = get_next_line(0);
+			// ft_printf("heredoc>");
+		}
 	}
 	clean_the_mess();
 	free(line);
@@ -101,10 +107,10 @@ void	pipex_here_doc(int ac, char **av, char *end_of_file, char **envp)
 	dup2(fd, STDIN_FILENO);
 	close(fd);
 	while (i < ac - 2)
-	{
 		next_cmd(av[i++], envp);
-	}
 	fd1 = open(av[i + 1], O_WRONLY | O_CREAT | O_APPEND, 0644);
+	if (fd1 == -1)
+		ft_perror(ft_strjoin("Error opening ", av[i + 1]), 127);
 	dup2(fd1, STDOUT_FILENO);
 	close(fd1);
 	unlink(temp);
