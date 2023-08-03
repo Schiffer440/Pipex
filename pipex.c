@@ -6,7 +6,7 @@
 /*   By: adugain <adugain@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/07 15:17:12 by adugain           #+#    #+#             */
-/*   Updated: 2023/08/03 11:43:26 by adugain          ###   ########.fr       */
+/*   Updated: 2023/08/03 14:01:38 by adugain          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,25 +15,35 @@
 static void	next_cmd(char *cmd, char **envp)
 {
 	pid_t	pid;
+	// pid_t	save_pid;
 	int	p[2];
 
 	if (pipe(p) == -1)
 		ft_perror("Failed to pipe", 1);
 	pid = fork();
+	// if (pid == 0)
+	// 	save_pid = pid;
+	// else
+	// 	save_pid = 1;
 	if (pid == 0)
 	{
 		close(p[0]);
-		dup2(p[1], STDOUT_FILENO);
-		close(p[1]);
+		dup2(p[1], 1);
+		// close(p[1]);
 		// dup_pipeout(&(*p));
 		ft_exec(cmd, envp);
-		exit(1);
+		// close(p[0]);
+		close(p[1]);
 	}
 	else
 	{	
+		
 		close(p[1]);
-		dup2(p[0], STDIN_FILENO);
+		// dup2(p[0], 0);
+		// if (save_pid != 1)
+		// 	waitpid(save_pid, &save_pid, 0);
 		close(p[0]);
+		// wait(NULL);
 		// ft_exec(cmd, envp);
 		// dup_pipein(&(*p));
 	}
@@ -62,8 +72,8 @@ void	pipex(int ac, char **av, char **envp)
 		fd_perror(ft_strjoin("Error opening ", av[1]), fd1);
 	else
 	{
-		dup2(fd1, STDIN_FILENO);
-		close(fd1);
+		dup2(fd1, 0);
+		// close(fd1);
 	}
 	// fd2 = open(av[i + 1], O_WRONLY | O_CREAT | O_TRUNC, 0644);
 	// if (fd2 == -1)
@@ -82,13 +92,14 @@ void	pipex(int ac, char **av, char **envp)
 		fd2 = open(av[i + 1], O_WRONLY | O_CREAT | O_TRUNC, 0644);
 		if (fd2 == -1)
 			ft_perror(ft_strjoin(("Error opening "), av[i + 1]), 1);
-		dup2(fd2, STDOUT_FILENO);
-		close(fd2);
+		dup2(fd2, 1);
+		// close(fd2);
 		ft_exec(av[i], envp);
-		exit(1);
+		close(fd2);
+		// exit(1);
 	}
-	waitpid(pid, NULL, 0);
-	// close(fd1);
+		// wait(NULL);
+	close(fd1);
 	// close(fd2);
 }
 
