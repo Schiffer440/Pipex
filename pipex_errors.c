@@ -6,7 +6,7 @@
 /*   By: adugain <adugain@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/31 14:38:01 by adugain           #+#    #+#             */
-/*   Updated: 2023/08/02 17:56:46 by adugain          ###   ########.fr       */
+/*   Updated: 2023/08/02 19:34:50 by adugain          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,10 @@ void	fd_perror(char *msg, int fd)
 {
 	fd = open("/tmp/cheat", O_RDONLY | O_CREAT, 0644);
 	if (fd == -1)
-		ft_perror("Failed to hijack file", 127);
+	{	
+		perror("Failed to hijack file");
+		exit(127);
+	}
 	else
 	{
 		dup2(fd, STDIN_FILENO);
@@ -33,7 +36,10 @@ void	clean_the_mess(void)
 
 	fd_clean = open("/tmp/clean", O_RDONLY | O_CREAT, 0644);
 	if (fd_clean == -1)
-		ft_perror("Failed to clean heredoc...", 127);
+	{	
+		perror("Failed to clean heredoc...");
+		exit(127);
+	}
 	else
 	{
 		get_next_line(fd_clean);

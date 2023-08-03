@@ -6,7 +6,7 @@
 /*   By: adugain <adugain@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/07 15:17:12 by adugain           #+#    #+#             */
-/*   Updated: 2023/08/02 18:25:46 by adugain          ###   ########.fr       */
+/*   Updated: 2023/08/03 02:01:41 by adugain          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,24 +17,28 @@ static void	next_cmd(char *cmd, char **envp)
 	int	pid;
 	int	p[2];
 
+	(void)cmd;
+	(void)(envp);
 	if (pipe(p) == -1)
-		ft_perror("Failed to pipe", 127);
+		ft_perror("Failed to pipe", 1);
 	pid = fork();
 	if (pid == 0)
 	{
-		// dup2(p[1], STDOUT_FILENO);
-		// close(p[1]);
-		// close(p[0]);
-		dup_pipeout(p);
+		close(p[0]);
+		dup2(p[1], STDOUT_FILENO);
+		close(p[1]);
+		// dup_pipeout(&(*p));
 		ft_exec(cmd, envp);
 	}
 	else
-	{
-		// dup2(p[0], STDIN_FILENO);
-		// close(p[0]);
-		// close(p[1]);
-		dup_pipein(p);
+	{	
+		close(p[1]);
+		dup2(p[0], STDIN_FILENO);
+		close(p[0]);
+		// ft_exec(cmd, envp);
+		// dup_pipein(&(*p));
 	}
+	// ft_exec(cmd, envp);
 }
 
 void	pipex(int ac, char **av, char **envp)
@@ -50,18 +54,25 @@ void	pipex(int ac, char **av, char **envp)
 	else
 	{
 		dup2(fd1, STDIN_FILENO);
-		close(fd1);
+		// close(fd1);
 	}
+	// fd2 = open(av[i + 1], O_WRONLY | O_CREAT | O_TRUNC, 0644);
+	// if (fd2 == -1)
+	// 	ft_perror(ft_strjoin(("Error opening "), av[i + 1]), 1);
+	// dup2(fd2, STDOUT_FILENO);
 	while (i < ac - 2)
 	{
 		next_cmd(av[i++], envp);
+		// ft_exec(av[i], envp);
 	}
+	// ft_exec(av[i], envp);
 	fd2 = open(av[i + 1], O_WRONLY | O_CREAT | O_TRUNC, 0644);
 	if (fd2 == -1)
-		ft_perror(ft_strjoin("Error opening ", av[i + 1]), 127);
+		ft_perror(ft_strjoin(("Error opening "), av[i + 1]), 1);
 	dup2(fd2, STDOUT_FILENO);
-	close(fd2);
 	ft_exec(av[i], envp);
+	close(fd1);
+	close(fd2);
 }
 
 static void	get_temp(int fd, char *end_of_file)
@@ -69,7 +80,6 @@ static void	get_temp(int fd, char *end_of_file)
 	char	*line;
 
 	line = get_next_line(0);
-	// ft_printf("heredoc>");
 	while (line != NULL)
 	{
 		if (ft_strncmp(line, end_of_file, sizeof(line) - 1) == 0
@@ -82,7 +92,6 @@ static void	get_temp(int fd, char *end_of_file)
 			write(fd, "\n", 1);
 			free(line);
 			line = get_next_line(0);
-			// ft_printf("heredoc>");
 		}
 	}
 	clean_the_mess();
@@ -119,7 +128,7 @@ void	pipex_here_doc(int ac, char **av, char *end_of_file, char **envp)
 
 int	main(int ac, char **av, char **envp)
 {
-	if (ac >= 4)
+	if (ac >= 5)
 	{
 		if (ft_strncmp(av[1], "here_doc", 8) == 0)
 		{
@@ -129,11 +138,11 @@ int	main(int ac, char **av, char **envp)
 		}
 		else
 			pipex(ac, av, envp);
-		while (wait(NULL) != 0 || errno != ECHILD)
+		while (wait(NULL) > 0)
 			;
 		return (0);
 	}
 	else
-		write(1, "\n", 1);
+		ft_printf("usage: ./pipex file1 cmd1 cmd2 file2");
 	return (0);
 }

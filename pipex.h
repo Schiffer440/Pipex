@@ -6,13 +6,14 @@
 /*   By: adugain <adugain@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/25 11:04:39 by adugain           #+#    #+#             */
-/*   Updated: 2023/08/02 18:27:58 by adugain          ###   ########.fr       */
+/*   Updated: 2023/08/02 19:56:40 by adugain          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef PIPEX_H
 # define PIPEX_H
 # include "libft/libft.h"
+# include <signal.h>
 
 void	pipex(int ac, char **av, char **envp);
 void	pipex_here_doc(int ac, char **av, char *endname, char **envp);
@@ -21,7 +22,7 @@ void	ft_exec(char *cmd, char **envp);
 void	fd_perror(char *msg, int fd);
 void	clean_the_mess(void);
 void	exec_error(char **paths, char **cmd, char *com);
-void	dup_pipein(int *p);
-void	dup_pipeout(int *p);
+void	dup_pipein(int p[]);
+void	dup_pipeout(int p[]);
 
 #endif
