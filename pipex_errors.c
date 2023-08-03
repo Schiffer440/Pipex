@@ -6,7 +6,7 @@
 /*   By: adugain <adugain@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/31 14:38:01 by adugain           #+#    #+#             */
-/*   Updated: 2023/08/02 19:34:50 by adugain          ###   ########.fr       */
+/*   Updated: 2023/08/03 11:33:23 by adugain          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ void	clean_the_mess(void)
 	if (fd_clean == -1)
 	{	
 		perror("Failed to clean heredoc...");
-		exit(127);
+		exit(1);
 	}
 	else
 	{
