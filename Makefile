@@ -6,15 +6,13 @@
 #    By: adugain <adugain@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/07/19 21:41:34 by adugain           #+#    #+#              #
-#    Updated: 2023/08/04 10:44:10 by adugain          ###   ########.fr        #
+#    Updated: 2023/08/04 11:09:20 by adugain          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = pipex
 
 LIBFT = libft/libft.a
-
-LIBX = minilibx/libmlx.a
 
 SRC = pipex.c pipex_utils.c pipex_errors.c cmds.c
 

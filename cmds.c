@@ -6,7 +6,7 @@
 /*   By: adugain <adugain@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/04 10:42:25 by adugain           #+#    #+#             */
-/*   Updated: 2023/08/04 10:43:46 by adugain          ###   ########.fr       */
+/*   Updated: 2023/08/04 11:22:28 by adugain          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,8 +25,8 @@ void	next_cmd(char *cmd, char **envp, char *std)
 	{
 		close(p[0]);
 		dup2(p[1], 1);
-		ft_exec(cmd, envp);
 		close(p[1]);
+		ft_exec(cmd, envp);
 	}
 	else
 	{	
@@ -91,4 +91,3 @@ void	last_cmd_heredoc(char **av, char **envp, int *i)
 		close(p[0]);
 	}
 }
-

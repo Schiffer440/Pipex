@@ -6,7 +6,7 @@
 #    By: adugain <adugain@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/11/07 11:45:28 by adugain           #+#    #+#              #
-#    Updated: 2023/07/31 10:36:08 by adugain          ###   ########.fr        #
+#    Updated: 2023/08/04 11:06:05 by adugain          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -37,7 +37,7 @@ OBJ := $(addprefix $(OBJ_DIR), $(OBJ))
 DEP := $(OBJ:.o=.d)
 
 $(NAME): $(OBJ)
-	ar -rcs $(NAME) $(OBJ)
+	@ar -rcs $(NAME) $(OBJ)
 	
 clean:
 	rm -rf $(OBJ_DIR)
@@ -51,6 +51,6 @@ re: fclean all
 
 $(OBJ_DIR)%.o : %.c
 	@mkdir -p $(@D)
-	@${CC} ${CFLAGS} -c $< -o $@
+	${CC} ${CFLAGS} -c $< -o $@
 
 -include $(DEP)

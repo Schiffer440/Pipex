@@ -6,7 +6,7 @@
 /*   By: adugain <adugain@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/07 15:17:12 by adugain           #+#    #+#             */
-/*   Updated: 2023/08/04 10:53:27 by adugain          ###   ########.fr       */
+/*   Updated: 2023/08/04 11:21:00 by adugain          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,8 +94,8 @@ int	main(int ac, char **av, char **envp)
 	}
 	else
 	{
-		ft_printf("usage: ./pipex infile cmd1 cmd2 ... outfile");
-		ft_printf(" heredoc usage: ./pipex here_doc cmd1 cmd2 ... outfile");
+		ft_printf(">usage: ./pipex infile cmd1 cmd2 ... outfile\n");
+		ft_printf(">heredoc usage: ./pipex here_doc cmd1 cmd2 ... outfile");
 	}
 	return (0);
 }
