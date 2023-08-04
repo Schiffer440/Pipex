@@ -6,7 +6,7 @@
 /*   By: adugain <adugain@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/25 11:04:39 by adugain           #+#    #+#             */
-/*   Updated: 2023/08/02 19:56:40 by adugain          ###   ########.fr       */
+/*   Updated: 2023/08/04 10:57:30 by adugain          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,8 @@ void	ft_exec(char *cmd, char **envp);
 void	fd_perror(char *msg, int fd);
 void	clean_the_mess(void);
 void	exec_error(char **paths, char **cmd, char *com);
-void	dup_pipein(int p[]);
-void	dup_pipeout(int p[]);
+void	next_cmd(char *cmd, char **envp, char *std);
+void	last_cmd(char **av, char **envp, int *i);
+void	last_cmd_heredoc(char **av, char **envp, int *i);
 
 #endif

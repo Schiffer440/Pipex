@@ -6,7 +6,7 @@
 /*   By: adugain <adugain@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/25 11:11:05 by adugain           #+#    #+#             */
-/*   Updated: 2023/08/02 20:35:14 by adugain          ###   ########.fr       */
+/*   Updated: 2023/08/04 10:55:37 by adugain          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,8 +93,8 @@ void	ft_exec(char *cmd, char **envp)
 	char	**cl_cmd;
 	char	**paths;
 	char	*exec;
-	int	i;
-	
+	int		i;
+
 	i = -1;
 	exec = NULL;
 	paths = get_paths(envp);
@@ -105,10 +105,7 @@ void	ft_exec(char *cmd, char **envp)
 			exec = ft_strdup(cmd);
 	}
 	if (exec == NULL)
-	{
-		// cl_cmd = ft_split(cmd, ' ');
 		exec = get_exec(paths, cl_cmd);
-	}
 	if (!exec || execve(exec, cl_cmd, envp) == -1)
 		exec_error(paths, cl_cmd, &(*cmd));
 }
